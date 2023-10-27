@@ -9,10 +9,7 @@ from utils import save_words_to_file
 @click.argument("file_path", type=click.Path(exists=True))
 def calc(file_path: str, save_to: str | None, limit: int | None) -> None:
     """Calculate vocabulary from pdf file"""
-    if file_path.endswith(".pdf"):
-        file_text = tp.extract_text_from_pdf(file_path)
-    else:
-        file_text = tp.extract_text_from_file(file_path)
+    file_text = tp.extract_text_from_file(file_path)
 
     words_from_text = list(tp.lemmatize_words(file_text))
     words_counter = tp.get_words_counter(words_from_text)

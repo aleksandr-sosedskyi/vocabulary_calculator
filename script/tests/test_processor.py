@@ -8,19 +8,19 @@ TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class TestTextProcessor(TestCase):
-    def test_extract_text_from_file(self):
+    def test_extract_text_from_txt_file(self):
         text = TextProcessor.extract_text_from_file(
             os.path.join(TEST_DIR, "test_helpers", "text.txt")
         )
         self.assertEqual(text.strip(), "Some test text for tests.")
 
-    def test_extract_text_from_pdf(self):
-        text = TextProcessor.extract_text_from_pdf(
+    def test_extract_text_from_pdf_file(self):
+        text = TextProcessor.extract_text_from_file(
             os.path.join(TEST_DIR, "test_helpers", "test.pdf")
         )
         self.assertEqual(
             text.strip(),
-            "This is a test PDF document. \nIf you can read this, you have Adobe Acrobat Reader installed on your computer.",
+            "If you can read this, you have Adobe Acrobat Reader installed on your computer. \n\nThis is a test PDF document.".lower(),
         )
 
     def test_lemmatize_words(self):
