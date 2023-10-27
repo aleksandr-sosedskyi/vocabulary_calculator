@@ -1,32 +1,40 @@
 from collections import Counter
 
-import pypdf
 import spacy
+import textract
 
 # Load english language model
 nlp = spacy.load("en_core_web_sm")
 
 
 class TextProcessor:
-    @staticmethod
-    def extract_text_from_file(file_path: str) -> str:
-        """Extract text from file"""
-        with open(file_path, "r") as file:
-            return file.read()
-
-    @staticmethod
-    def extract_text_from_pdf(file_path: str) -> str:
+    @classmethod
+    def _extract_text_from_pdf(cls, file_path: str) -> str:
         """Extract text from pdf file"""
-        reader = pypdf.PdfReader(file_path)
-        file_text: str = ""
+        text_encoded = textract.process(file_path, method="pdfminer")
+        file_text = text_encoded.decode("utf-8")
 
-        for page in reader.pages:
-            file_text += page.extract_text()
+        return file_text.lower()
+
+    @classmethod
+    def _extract_text_from_txt(cls, file_path: str) -> str:
+        """Extract text from txt file"""
+        with open(file_path, "r") as file:
+            file_text = file.read()
 
         return file_text
 
-    @staticmethod
-    def lemmatize_words(text: str) -> list[str]:
+    @classmethod
+    def extract_text_from_file(cls, file_path: str) -> str:
+        if file_path.endswith(".pdf"):
+            file_text = cls._extract_text_from_pdf(file_path)
+        elif file_path.endswith(".txt"):
+            file_text = cls._extract_text_from_txt(file_path)
+
+        return file_text
+
+    @classmethod
+    def lemmatize_words(cls, text: str) -> list[str]:
         """Extracting Unique Words from Text
 
         Currently, we need to process all words twice due to an issue with inflected words.
